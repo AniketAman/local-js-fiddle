@@ -1,5 +1,8 @@
 {
   window.addEventListener("DOMContentLoaded", event => {
+    let htmlEd;
+    let cssEd;
+    let jsEd;
     const fileName = window.location.search.substring(1).split("=")[1];
     fetch(`/getStatus/${fileName}`).then(res => {
       res.json().then(({ js, html, css, isNew }) => {
@@ -26,7 +29,7 @@
 
   function addCodeMirror(html, js, css) {
     //{value: myTextArea.value}
-    const htmlEd = CodeMirror.fromTextArea(document.getElementById("html"), {
+    htmlEd = CodeMirror.fromTextArea(document.getElementById("html"), {
       lineNumbers: true,
       value: html,
       htmlMode: true,
@@ -35,13 +38,13 @@
       theme: "blackboard"
     });
     window.ht = htmlEd;
-    const cssEd = CodeMirror.fromTextArea(document.getElementById("css"), {
+    cssEd = CodeMirror.fromTextArea(document.getElementById("css"), {
       lineNumbers: true,
       value: css,
       matchingBracket: true,
       theme: "blackboard"
     });
-    const jsEd = CodeMirror.fromTextArea(document.getElementById("js"), {
+    jsEd = CodeMirror.fromTextArea(document.getElementById("js"), {
       lineNumbers: true,
       value: js,
       mode: "javascript",
@@ -51,10 +54,11 @@
   }
 
   function refreshWindow() {
-    const html = document.querySelector("#html").value;
-    const css = document.querySelector("#css").value;
-    const js = document.querySelector("#js").value;
+    const html = htmlEd.getValue();
+    const css = cssEd.getValue();
+    const js = jsEd.getValue();
     const fileName = window.location.search.substring(1).split("=")[1];
+
     // const template = generateTemplate(html, css, js);
     // iframe.append(generateIframe(template));
     fetch("/submit", {
